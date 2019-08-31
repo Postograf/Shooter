@@ -41,11 +41,15 @@ namespace CompleteProject {
                     BulletManager.Shoot();
                     if (GunType.Ak47 == GunManager.current_gun.Shoot())
                     {
+                        Instantiate(Bullet, transform.position, transform.rotation);
+                    }
+                    else if (GunType.Minigun == GunManager.current_gun.Shoot())
+                    {
                         float angel1 = Vector3.Angle(right, transform.forward);
                         float angel2 = Vector3.Angle(forward, transform.forward);
                         if (angel1 > 90 || (angel1 == angel2 * 2))
                             angel2 *= -1;
-                        Instantiate(Bullet, transform.position, Quaternion.AngleAxis(Random.Range(-5f + angel2, 5f + angel2), Vector3.up));
+                        Instantiate(Bullet, transform.position, Quaternion.AngleAxis(Random.Range(-10f + angel2, 10f + angel2), Vector3.up));
                     }
                     //GunManager.current_gun.Shoot();
                 }

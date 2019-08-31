@@ -74,8 +74,24 @@ namespace CompleteProject
             bulletSpeed = 150f;
             maxBulletsCount = 500;
         }
-        //
+
+        public override GunType Shoot()
+        {
+            // Play the gun shot audioclip.
+            GunManager.gunAudio.Play();
+
+            // Enable the lights.
+            GunManager.gunLight.enabled = true;
+
+            // Stop the particles from playing if they were, then start the particles.
+            GunManager.gunParticles.Stop();
+            GunManager.gunParticles.Play();
+
+            GunManager.faceLight.enabled = true;
+            return GunType.Minigun;
+        }
     }
+
     public class SimpleWeapon : Gun
     {
         public SimpleWeapon()
@@ -127,5 +143,4 @@ namespace CompleteProject
             faceLight = GetComponentInChildren<Light>();
         }
     }
-
 }
