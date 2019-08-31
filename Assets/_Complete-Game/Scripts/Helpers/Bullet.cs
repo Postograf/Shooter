@@ -6,7 +6,7 @@ namespace CompleteProject {
     public class Bullet : MonoBehaviour
     {
         Rigidbody rb;
-        float bulletSpeed = 150f;//Gun.bulletSpeed;
+        float bulletSpeed = Gun.bulletSpeed;
         // Start is called before the first frame update
         void Start()
         {
@@ -23,8 +23,9 @@ namespace CompleteProject {
                 if (enemyHealth != null)
                 {
                     enemyHealth.TakeDamage(Gun.damagePerShot, transform.position);
+                    Destroy(gameObject);
                 }
-                Destroy(gameObject);
+                
             }
         }
     }

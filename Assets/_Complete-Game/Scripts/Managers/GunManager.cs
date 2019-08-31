@@ -1,14 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+
 namespace CompleteProject
 {
     public enum GunType
     {
         SimpleGun,
         Ak47,
-        Laser
+        Minigun
     }
     public class Gun : MonoBehaviour
     {
@@ -29,40 +29,22 @@ namespace CompleteProject
         public Gun()
         {
             string_type = "no weapon";
-
         }
 
-        virtual public void Shoot(
-           ref LineRenderer gunLine,
-           ref Ray shootRay,
-           ref RaycastHit shootHit,
-           int shootableMask,
-            Light faceLight)
+        virtual public GunType Shoot()
         {
-            //
-            gunLine.enabled = true;
-            gunLine.SetPosition(0, transform.position);
+            // Play the gun shot audioclip.
+            GunManager.gunAudio.Play();
 
+            // Enable the lights.
+            GunManager.gunLight.enabled = true;
 
-            //shootRay.origin = transform.position;
-            //shootRay.direction = transform.forward;
+            // Stop the particles from playing if they were, then start the particles.
+            GunManager.gunParticles.Stop();
+            GunManager.gunParticles.Play();
 
-
-            //if (Physics.Raycast(shootRay, out shootHit, range, shootableMask)) {
-
-            //EnemyHealth enemyHealth = shootHit.collider.GetComponent<EnemyHealth>();
-
-
-            //if (enemyHealth != null) {
-
-            //enemyHealth.TakeDamage(damagePerShot, shootHit.point);
-            //}
-
-
-
-            //gunLine.SetPosition(1, shootRay.origin + shootRay.direction * range);
-            //}
-
+            GunManager.faceLight.enabled = true;
+            return GunType.Ak47;
         }
 
     }
@@ -75,20 +57,21 @@ namespace CompleteProject
             timeBetweenBullets = 0.07f;
             range = 100f;
             effectsDisplayTime = 0.1f;
-            //bulletSpeed = ;
+            bulletSpeed = 100f;
             maxBulletsCount = 35;
         }
         //
     }
-    public class Laser : Gun
+    public class Minigun : Gun
     {
-        public Laser()
+        public Minigun()
         {
-            SetType("Laser");
+            SetType("Minigun");
             damagePerShot = 5;
             timeBetweenBullets = 0.00001f;
             range = 100f;
             effectsDisplayTime = 0.00001f;
+            bulletSpeed = 150f;
             maxBulletsCount = 500;
         }
         //
@@ -102,6 +85,7 @@ namespace CompleteProject
             timeBetweenBullets = 0.5f;
             range = 100f;
             effectsDisplayTime = 0.5f;
+            bulletSpeed = 50f;
             maxBulletsCount = 6;
         }
         //
@@ -109,8 +93,12 @@ namespace CompleteProject
 
     public class GunManager : MonoBehaviour
     {
-        Text text;
         static public Gun current_gun;
+        static public ParticleSystem gunParticles;                    // Reference to the particle system.
+        static public AudioSource gunAudio;                           // Reference to the audio source.
+        static public Light gunLight;                                 // Reference to the light component.
+        static public Light faceLight;								// Duh
+        public GameObject Bullet;
         static public void SetType(GunType type)
         {
             switch (type)
@@ -118,8 +106,8 @@ namespace CompleteProject
                 case (GunType.Ak47):
                     current_gun = new Ak47();
                     break;
-                case (GunType.Laser):
-                    current_gun = new Laser();
+                case (GunType.Minigun):
+                    current_gun = new Minigun();
                     break;
                 case (GunType.SimpleGun):
                     current_gun = new SimpleWeapon();
@@ -132,14 +120,12 @@ namespace CompleteProject
         // Start is called before the first frame update
         void Start()
         {
-            text = GetComponent<Text>();
-            SetType(GunType.Laser);
+            SetType(GunType.Minigun);
+            gunParticles = GetComponent<ParticleSystem>();
+            gunAudio = GetComponent<AudioSource>();
+            gunLight = GetComponent<Light>();
+            faceLight = GetComponentInChildren<Light>();
         }
-        void Update()
-        {
-            text.text = "Weapon: " + Gun.string_type;
-        }
-
     }
 
 }

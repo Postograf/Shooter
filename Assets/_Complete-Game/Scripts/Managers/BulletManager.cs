@@ -12,7 +12,7 @@ namespace CompleteProject
         void Start()
         {
             text = GetComponent<Text>();
-            GunManager.SetType(GunType.Laser);
+            GunManager.SetType(GunType.Minigun);
             Reload();
         }
 

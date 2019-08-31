@@ -3,42 +3,28 @@ using UnitySampleAssets.CrossPlatformInput;
 
 namespace CompleteProject {
     public class PlayerShooting : MonoBehaviour {
-        private int damagePerShot;                  // The damage inflicted by each bullet.
         private float timeBetweenBullets;        // The time between each shot.
-        private float range;                      // The distance the gun can fire.
-
+        float effectsDisplayTime;                // The proportion of the timeBetweenBullets that the effects will display for.
 
         float timer;                                    // A timer to determine when to fire.
-        Ray shootRay = new Ray();                       // A ray from the gun end forwards.
-        RaycastHit shootHit;                            // A raycast hit to get information about what was hit.
-        int shootableMask;                              // A layer mask so the raycast only hits things on the shootable layer.
-        ParticleSystem gunParticles;                    // Reference to the particle system.
-        LineRenderer gunLine;                           // Reference to the line renderer.
-        AudioSource gunAudio;                           // Reference to the audio source.
+
         Light gunLight;                                 // Reference to the light component.
-        public Light faceLight;								// Duh
-        float effectsDisplayTime;                // The proportion of the timeBetweenBullets that the effects will display for.
+        Light faceLight;                              // Duh
+        Vector3 right;
+        Vector3 forward;
 
         public GameObject Bullet;
 
         void UpdateValues() {
-            damagePerShot = Gun.damagePerShot;
             timeBetweenBullets = Gun.timeBetweenBullets;
-            range = Gun.range;
             effectsDisplayTime = Gun.effectsDisplayTime;
         }
 
         void Awake() {
-            // Create a layer mask for the Shootable layer.
-            shootableMask = LayerMask.GetMask("Shootable");
-
-            // Set up the references.
-            gunParticles = GetComponent<ParticleSystem>();
-            gunLine = GetComponent<LineRenderer>();
-            gunAudio = GetComponent<AudioSource>();
             gunLight = GetComponent<Light>();
-            //faceLight = GetComponentInChildren<Light> ();
-
+            faceLight = GetComponentInChildren<Light> ();
+            right = transform.right;
+            forward = transform.forward;
         }
 
 
@@ -51,9 +37,17 @@ namespace CompleteProject {
             if (Input.GetButton("Fire1") && timer >= timeBetweenBullets && Time.timeScale != 0) {
                 // ... shoot the gun.
                 if (!BulletManager.Empty()) {
+                    timer = 0f;
                     BulletManager.Shoot();
+                    if (GunType.Ak47 == GunManager.current_gun.Shoot())
+                    {
+                        float angel1 = Vector3.Angle(right, transform.forward);
+                        float angel2 = Vector3.Angle(forward, transform.forward);
+                        if (angel1 > 90 || (angel1 == angel2 * 2))
+                            angel2 *= -1;
+                        Instantiate(Bullet, transform.position, Quaternion.AngleAxis(Random.Range(-5f + angel2, 5f + angel2), Vector3.up));
+                    }
                     //GunManager.current_gun.Shoot();
-                    Shoot();
                 }
             }
 
@@ -65,7 +59,7 @@ namespace CompleteProject {
                 UpdateValues();
             }
             if (Input.GetKey(KeyCode.Alpha2)) {
-                GunManager.SetType(GunType.Laser);
+                GunManager.SetType(GunType.Minigun);
                 UpdateValues();
             }
             if (Input.GetKey(KeyCode.Alpha3)) {
@@ -90,31 +84,8 @@ namespace CompleteProject {
 
         public void DisableEffects() {
             // Disable the line renderer and the light.
-            gunLine.enabled = false;
             faceLight.enabled = false;
             gunLight.enabled = false;
-        }
-
-
-        void Shoot() {
-            // Reset the timer.
-            timer = 0f;
-
-            // Play the gun shot audioclip.
-            gunAudio.Play();
-
-            // Enable the lights.
-            gunLight.enabled = true;
-
-
-            // Stop the particles from playing if they were, then start the particles.
-            gunParticles.Stop();
-            gunParticles.Play();
-
-            faceLight.enabled = true;
-            gunLine.enabled = true;
-            //GunManager.current_gun.Shoot(ref gunLine, ref shootRay, ref shootHit, shootableMask, faceLight);
-            Instantiate(Bullet, transform.position, transform.rotation);
         }
     }
 }
