@@ -8,14 +8,15 @@ namespace CompleteProject
     {
         SimpleGun,
         Ak47,
-        Minigun
+        Minigun,
+        Shotgun
     }
     public class Gun : MonoBehaviour
     {
+        public static float range;
         public static string string_type;
         public static int damagePerShot;
         public static float timeBetweenBullets;
-        public static float range;
         public static float effectsDisplayTime;
         public static float bulletSpeed;
         //public static int bulletsCount;
@@ -79,7 +80,6 @@ namespace CompleteProject
         {
             // Play the gun shot audioclip.
             GunManager.gunAudio.Play();
-
             // Enable the lights.
             GunManager.gunLight.enabled = true;
 
@@ -107,6 +107,36 @@ namespace CompleteProject
         //
     }
 
+    public class Shotgun : Gun
+    {
+        public Shotgun()
+        {
+            SetType("Shotgun");
+            damagePerShot = 50;
+            timeBetweenBullets = 0.5f;
+            range = 100f;
+            effectsDisplayTime = 0.5f;
+            bulletSpeed = 100f;
+            maxBulletsCount = 7;
+        }
+        public override GunType Shoot()
+        {
+            // Play the gun shot audioclip.
+            GunManager.gunAudio.Play();
+
+            // Enable the lights.
+            GunManager.gunLight.enabled = true;
+
+            // Stop the particles from playing if they were, then start the particles.
+            GunManager.gunParticles.Stop();
+            GunManager.gunParticles.Play();
+
+            GunManager.faceLight.enabled = true;
+            return GunType.Shotgun;
+        }
+        //
+    }
+
     public class GunManager : MonoBehaviour
     {
         static public Gun current_gun;
@@ -127,6 +157,9 @@ namespace CompleteProject
                     break;
                 case (GunType.SimpleGun):
                     current_gun = new SimpleWeapon();
+                    break;
+                case (GunType.Shotgun):
+                    current_gun = new Shotgun();
                     break;
                 default:
                     break;

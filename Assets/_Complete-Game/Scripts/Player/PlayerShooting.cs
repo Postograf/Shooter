@@ -38,18 +38,36 @@ namespace CompleteProject {
                 // ... shoot the gun.
                 if (!BulletManager.Empty()) {
                     timer = 0f;
-                    BulletManager.Shoot();
+                    
                     if (GunType.Ak47 == GunManager.current_gun.Shoot())
                     {
+                        BulletManager.Shoot();
                         Instantiate(Bullet, transform.position, transform.rotation);
                     }
                     else if (GunType.Minigun == GunManager.current_gun.Shoot())
                     {
+                        BulletManager.Shoot();
                         float angel1 = Vector3.Angle(right, transform.forward);
                         float angel2 = Vector3.Angle(forward, transform.forward);
                         if (angel1 > 90 || (angel1 == angel2 * 2))
                             angel2 *= -1;
-                        Instantiate(Bullet, transform.position, Quaternion.AngleAxis(Random.Range(-10f + angel2, 10f + angel2), Vector3.up));
+                        Instantiate(
+                            Bullet, 
+                            transform.position, 
+                            Quaternion.AngleAxis(Random.Range(-10f + angel2, 10f + angel2), Vector3.up));
+                    }
+                    else if (GunType.Shotgun == GunManager.current_gun.Shoot()) {
+                        BulletManager.Shoot(7);
+                        float angel1 = Vector3.Angle(right, transform.forward);
+                        float angel2 = Vector3.Angle(forward, transform.forward);
+                        if (angel1 > 90 || (angel1 == angel2 * 2))
+                            angel2 *= -1;
+                        for (int i = 0; i < 7; i++) {
+                            Instantiate(
+                                Bullet, 
+                                transform.position, 
+                                Quaternion.AngleAxis(Random.Range(-30f + angel2, 30f + angel2), Vector3.up));
+                        }
                     }
                     //GunManager.current_gun.Shoot();
                 }
@@ -68,6 +86,10 @@ namespace CompleteProject {
             }
             if (Input.GetKey(KeyCode.Alpha3)) {
                 GunManager.SetType(GunType.SimpleGun);
+                UpdateValues();
+            }
+            if (Input.GetKey(KeyCode.Alpha4)) {
+                GunManager.SetType(GunType.Shotgun);
                 UpdateValues();
             }
 #else
