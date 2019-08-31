@@ -10,9 +10,8 @@ namespace CompleteProject {
 
         Light gunLight;                                 // Reference to the light component.
         Light faceLight;                              // Duh
-        Vector3 right;
-        Vector3 forward;
 
+        public GameObject bullet;
         public GameObject Bullet;
 
         void UpdateValues() {
@@ -23,8 +22,7 @@ namespace CompleteProject {
         void Awake() {
             gunLight = GetComponent<Light>();
             faceLight = GetComponentInChildren<Light> ();
-            right = transform.right;
-            forward = transform.forward;
+            
         }
 
 
@@ -39,15 +37,8 @@ namespace CompleteProject {
                 if (!BulletManager.Empty()) {
                     timer = 0f;
                     BulletManager.Shoot();
-                    if (GunType.Ak47 == GunManager.current_gun.Shoot())
-                    {
-                        float angel1 = Vector3.Angle(right, transform.forward);
-                        float angel2 = Vector3.Angle(forward, transform.forward);
-                        if (angel1 > 90 || (angel1 == angel2 * 2))
-                            angel2 *= -1;
-                        Instantiate(Bullet, transform.position, Quaternion.AngleAxis(Random.Range(-5f + angel2, 5f + angel2), Vector3.up));
-                    }
-                    //GunManager.current_gun.Shoot();
+                    GunManager.current_gun.Shoot();
+                    
                 }
             }
 
