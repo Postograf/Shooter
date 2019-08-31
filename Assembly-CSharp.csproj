@@ -73,6 +73,7 @@
      <Compile Include="Assets\_Complete-Game\Scripts\Managers\EnemyManager.cs" />
      <Compile Include="Assets\_Complete-Game\Scripts\Managers\GameOverManager.cs" />
      <Compile Include="Assets\_Complete-Game\Scripts\Managers\GunManager.cs" />
+     <Compile Include="Assets\_Complete-Game\Scripts\Managers\GunTextManager.cs" />
      <Compile Include="Assets\_Complete-Game\Scripts\Managers\PauseManager.cs" />
      <Compile Include="Assets\_Complete-Game\Scripts\Managers\ScoreManager.cs" />
      <Compile Include="Assets\_Complete-Game\Scripts\Player\PlayerHealth.cs" />
