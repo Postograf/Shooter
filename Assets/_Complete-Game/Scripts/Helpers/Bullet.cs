@@ -6,7 +6,7 @@ namespace CompleteProject {
     public class Bullet : MonoBehaviour
     {
         Rigidbody rb;
-        float bulletSpeed = 150.0f;
+        float bulletSpeed = 150f;//Gun.bulletSpeed;
         // Start is called before the first frame update
         void Start()
         {
