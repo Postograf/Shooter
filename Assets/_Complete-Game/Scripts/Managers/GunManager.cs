@@ -75,6 +75,7 @@ namespace CompleteProject
             timeBetweenBullets = 0.07f;
             range = 100f;
             effectsDisplayTime = 0.1f;
+            //bulletSpeed = ;
             maxBulletsCount = 35;
         }
         //
