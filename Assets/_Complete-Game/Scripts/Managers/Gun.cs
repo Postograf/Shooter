@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace CompleteProject
 {
@@ -37,7 +39,7 @@ namespace CompleteProject
             enum_type = enum_type_;
         }
 
-        protected float GetRange(float angle_range) {
+        public float GetRange(float angle_range) {
             float angel1 = Vector3.Angle(right, transform.forward);
             float angel2 = Vector3.Angle(forward, transform.forward);
             if (angel1 > 90 || (angel1 == angel2 * 2))
@@ -50,26 +52,18 @@ namespace CompleteProject
             
         }
 
-
-        virtual public void Shoot() {
+        
+    virtual public List<float> Shoot() {
             gunAudio.Play();
             gunLight.enabled = true;
             gunParticles.Stop();
             gunParticles.Play();
 
             faceLight.enabled = true;
-            //Bullet a = gameObject.AddComponent("te") as Bullet;
-            Instantiate(
-                bullet,
-                transform.position,
-                Quaternion.AngleAxis(
-                    GetRange(10),
-                    Vector3.up
-                )
-            );
-            
-
-        }
+            List<float> result = new List<float>();
+            result.Add(10f);
+            return result;
+    }
         void Start() {
             GunManager.SetType(GunType.Minigun);
             gunParticles = GetComponent<ParticleSystem>();

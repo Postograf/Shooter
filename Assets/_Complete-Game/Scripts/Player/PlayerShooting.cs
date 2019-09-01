@@ -12,7 +12,6 @@ namespace CompleteProject {
         Light faceLight;                              // Duh
 
         public GameObject bullet;
-        public GameObject Bullet;
 
         void UpdateValues() {
             timeBetweenBullets = Gun.timeBetweenBullets;
@@ -37,7 +36,11 @@ namespace CompleteProject {
                 if (!BulletManager.Empty()) {
                     timer = 0f;
                     BulletManager.Shoot();
-                    GunManager.current_gun.Shoot();
+                    foreach (var range_ in GunManager.current_gun.Shoot()) {
+                        Instantiate(bullet, transform.position, Quaternion.AngleAxis(range_, Vector3.up));
+                    }
+
+                    
                     
                 }
             }
