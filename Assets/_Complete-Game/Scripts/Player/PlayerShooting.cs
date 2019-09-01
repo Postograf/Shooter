@@ -10,14 +10,18 @@ namespace CompleteProject {
 
         Light gunLight;                                 // Reference to the light component.
         Light faceLight;                              // Duh
-        Vector3 right;
-        Vector3 forward;
+        static public Vector3 right;
+        static public Vector3 forward;
 
         public GameObject Bullet;
 
         void UpdateValues() {
             timeBetweenBullets = Gun.timeBetweenBullets;
             effectsDisplayTime = Gun.effectsDisplayTime;
+        }
+
+        void Reload() {
+            BulletManager.Reload();
         }
 
         void Awake() {
@@ -38,8 +42,12 @@ namespace CompleteProject {
                 // ... shoot the gun.
                 if (!BulletManager.Empty()) {
                     timer = 0f;
-                    
-                    if (GunType.Ak47 == GunManager.current_gun.Shoot())
+                    foreach (var range_ in GunManager.current_gun.Shoot(transform.forward))
+                    {
+                        BulletManager.Shoot();
+                        Instantiate(Bullet, transform.position, Quaternion.AngleAxis(range_, Vector3.up));
+                    }
+                    /*if (GunType.Ak47 == GunManager.current_gun.Shoot())
                     {
                         BulletManager.Shoot();
                         Instantiate(Bullet, transform.position, transform.rotation);
@@ -54,7 +62,7 @@ namespace CompleteProject {
                         Instantiate(
                             Bullet, 
                             transform.position, 
-                            Quaternion.AngleAxis(Random.Range(-10f + angel2, 10f + angel2), Vector3.up));
+                            Quaternion.AngleAxis(Random.Range(-10f + angel2, 10f + angel2), transform.forward));
                     }
                     else if (GunType.Shotgun == GunManager.current_gun.Shoot()) {
                         BulletManager.Shoot(7);
@@ -68,13 +76,13 @@ namespace CompleteProject {
                                 transform.position, 
                                 Quaternion.AngleAxis(Random.Range(-30f + angel2, 30f + angel2), Vector3.up));
                         }
-                    }
+                    }*/
                     //GunManager.current_gun.Shoot();
                 }
             }
 
             if (Input.GetButton("Fire2")) {
-                BulletManager.Reload();
+                Invoke("Reload", 0.5f);
             }
             if (Input.GetKey(KeyCode.Alpha1)) {
                 GunManager.SetType(GunType.Ak47);
